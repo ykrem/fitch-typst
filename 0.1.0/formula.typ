@@ -1,35 +1,31 @@
-// type definition
-
-#let formula(depth, index, equation, prev-asm-depths, rule: none, is-last-asm: false) = {
-
-  assert(depth >= 1, message: "Depth must be positive! Remove spe lines.")
-
-  return (
-    depth: depth,
-    index: index,
+//type definition
+#let formula(index, equation, rule: none) = {
+  (
+    index: [#index],
     equation: equation,
-    rule: rule,
-    is-last-asm: is-last-asm,
-    prev-asm-depths: prev-asm-depths
+    rule: rule
   )
 }
 
-
 // utility formulas
 
-#let sps = formula(1,1,"UTIL subproof start", ()) // starts a subproof
-#let spe = formula(1,1,"UTIL subproof end", ()) // ends a subproof
-#let asm = formula(1,1,"UTIL assumption line", ()) // an assumption line
+#let sps = formula(1,"UTIL subproof start") // starts a subproof
+#let spe = formula(1,"UTIL subproof end") // ends a subproof
+#let asm = formula(1,"UTIL assumption line") // an assumption line
+
+#let spb = formula(1,"UTIL subproof break") // breaks two subproofs of the same depth
+
+#let utils = (sps, spe, asm, spb)
 
 // parse a single formula; use internally
-#let parse-single(fm, depth, line-number, prev-asm-depths) = {
+// note - can't parse on input because context is required for index insertion
+#let parse-single(fm, line-number) = {
 
   if type(fm) == content { // just an equation
       return formula(
-        depth,
         [#line-number],
         fm,
-        prev-asm-depths,
+        rule: []
       )
     }
 
@@ -39,66 +35,50 @@
 
       if fm.len() == 2 { // equation, rule
         return formula(
-          depth,
           [#line-number],
           fm.at(0), // equation
-          rule: fm.at(1), // rule
-          prev-asm-depths,
+          rule: fm.at(1) // rule
         )
       }
 
       else if fm.len() == 3 { // index, equation, rule
         return formula(
-          depth,
           fm.at(0), // index
-          fm.at(1), // index = line-number
-          rule: fm.at(2), // rule
-          prev-asm-depths
+          fm.at(1), // equation
+          rule: fm.at(2) // rule
         )
       }
 
+      //else
       panic("Array of invalid form! The valid forms are (equation, rule) or (index, equation, rule).")
 
       }
+
+    // else
 
     panic("Invalid input type! Valid inputs are equations or arrays.")
 
 }
 
 // parse input to array of formulas
-
 #let parse(arr) = {
 
-  assert(arr.first() != asm, message: "First line cannot be an assumption line!")
-
-  let depth = 1
   let formulas = ()
-  let line-number = 0
-  let cur-asm-depths = ()
+  let line-number = 1
 
   for line in arr {
 
-    line-number += 1
+    if line in utils {
+      formulas.push(line)
+    }
 
-    if line == sps {depth += 1}
-    
-    else if line == spe {
-      if depth in cur-asm-depths {cur-asm-depths.pop()}
-      depth -= 1
-      }
+    else { // is a visible formula
+      formulas.push(parse-single(line, line-number))
+      line-number += 1
+    }
 
-    else if line == asm { // existence of a last given a 'asm' is verified above
-        cur-asm-depths.push(depth)
-        formulas.last().is-last-asm = true
-      }
-
-    // then is a visible formula
-
-    else {
-      formulas.push(parse-single(line, depth, line-number, cur-asm-depths))
-      }
   }
-  
+
   return formulas
   
 }

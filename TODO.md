@@ -1,7 +1,6 @@
-- fix indentation per asm line
-- implmenet dependence on font size
-- implement dynamic asm line length
-- add customization
 - implement gap between two consecutive subproofs of the same depth (clip frame line in every depth?)
-- fix automatic numbering to ignore utility lines
-- fix brokenage
+- fix dependence on font size and odd constantage
+- implement dynamic or custom asm line length
+- add customization
+- make it make sense
+- restrict imports
