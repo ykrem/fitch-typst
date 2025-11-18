@@ -4,3 +4,5 @@
 - add customization
 - make it make sense
 - restrict imports
+- rethink structure to fit asb lines: heights, lengths and indentation
+- model [fitch](https://github.com/OpenLogicProject/fitch)?

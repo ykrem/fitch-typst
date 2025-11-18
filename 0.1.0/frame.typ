@@ -3,13 +3,13 @@
 #let height = 30pt
 
 #let frame-length = height
-#let frame-girth = 1.5pt
+#let frame-girth = .5pt
 #let frame-line = line(angle: 90deg, length: frame-length, stroke: frame-girth)
 #let frame-space = 10pt
 
 
 #let asm-length = 30pt
-#let asm-girth = 0.6pt
+#let asm-girth = frame-girth
 #let asm-line-isolated = line(length: asm-length, stroke: asm-girth)
 
 #let asm-spacing = line(stroke: 0pt, length: asm-length - frame-space)
