@@ -5,3 +5,5 @@
 - write the [README](README.md)
 - rethink numbering
 - strengthen input checking
+- tidy up
+- rethink library structure: proof environment, default parameters + argument flow

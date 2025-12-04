@@ -3,7 +3,8 @@
 
 #let indices(fms, style) = {
   
-    let font-size = 11pt // fix...
+    let font-size = 11pt // fix... constantage
+    // let s = em(context text.size)
 
     return stack(
       dir: ttb,
@@ -32,7 +33,7 @@
 
   stack(
     dir: ltr,
-    spacing: 11pt,
+    spacing: 11pt, // again, fix (solve, funny) constantage
     indices(parsed, index-style),
     frame(fms, frame-style: frame-style, formula-style: formula-style),
     rules(parsed, rule-style)
